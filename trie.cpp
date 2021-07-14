@@ -1,38 +1,35 @@
-#include<bits/stdc++.h>
-#define null NULL
-using namespace std;
-struct node
-{
-	bool end;
-	struct node *ch[26];
+struct node {
+    struct node* child[2];
+    int end;
 };
-struct node *newnode()
-{
-	node *temp;
-	temp=(node*)malloc(sizeof(node));
-	temp->end=false;
-	for(int i=0;i<26;i++) temp->ch[i]=NULL;
-	return temp;
+
+struct node *getNode() {
+    node *tmp = (node *)malloc(sizeof(node));
+    tmp->child[0] = tmp->child[1] = NULL;
+    tmp->end = 0;
+    return tmp;
 }
-void insert(struct node *p,string s)
-{
-	int len = s.length();
-	for(int i=0;i<len;i++)
-	{
-		int index = s.at(i) - 'a';
-		if(p->ch[index]==null) p->ch[index] = newnode();
-		p = p->ch[index];
-	}
-	p->end = true;
+
+void insert(node *root, int x) {
+    node *tmp = root;
+    for (int i = 30; i >= 0; i--) {
+        int ch = 0;
+        if (x & (1ll << i)) ch = 1;
+        if (tmp->child[ch] == NULL) tmp->child[ch] = getNode();
+        tmp->end++;
+        tmp = tmp->child[ch];
+    }
+    tmp->end++;
 }
-bool search(struct node *p, string s)
-{
-	int len = s.length();
-	for(int i=0;i<len;i++)
-	{
-		int index = s.at(i) - 'a';
-		if(p->ch[index]==null) return false;
-		p = p->ch[index];
-	} 
-	return true;
+
+void remove(node *root, int x) {
+    node *tmp = root;
+    for (int i = 30; i >= 0; i--) {
+        int ch = 0;
+        if (x & (1ll << i)) ch = 1;
+        if (tmp->child[ch] == NULL) tmp->child[ch] = getNode();
+        tmp->end--;
+        tmp = tmp->child[ch];
+    }
+    tmp->end--;
 }
